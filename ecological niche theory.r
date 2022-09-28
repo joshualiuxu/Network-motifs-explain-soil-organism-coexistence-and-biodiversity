@@ -32,7 +32,7 @@ for (i in 1:length(otulist)){
 names(otulist)[i] <- paste("net", i, sep = "")
 }
 
-envnew=read.csv("envnew.csv",row.names=1)
+envnew=read.csv("metadata.csv",row.names=1)
 
 #calculate niche breath
 #take TSEA as an example of ecological amplitude
