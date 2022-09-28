@@ -5,7 +5,7 @@ library(linkET)
 library(dplyr)
 library(ggplot2)
 
-top <- read.csv("top.csv", row.names=1)
+top <- read.csv("metadata20.csv", row.names=1)
 
 spec=top[,20:24]
 chem=top[,10:19]
