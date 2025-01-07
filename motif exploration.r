@@ -100,6 +100,7 @@ return(ntrip)
 ############################################################################
 # facilitation-mediated competition (facmcom)
 ############################################################################
+
 facmcom<-function(mat){
 
 diag(mat)=0  
@@ -109,12 +110,14 @@ nsp<-nrow(mat)
 mat[which(is.na(mat))]<-0
 matp<- mat; matp[which(matp<0)]<-0; matp[which(matp>0)]<-1
 matn<- mat; matn[which(matn>0)]<-0; matn[which(matn<0)]<-1
+
+matt<- mat; matt[which(matt>0)]<-1; matt[which(matt<0)]<-1
 #
 ntrip<-0
 for(i in 1:nsp){
 # first, subset two species facilitated by a third
-nei<-sum(matn[,i])
-idnei<-as.numeric(which(matn[,i]==1))
+nei<-sum(matt[,i])
+idnei<-as.numeric(which(matt[,i]==1))
 
 if(nei>=2){
 # number of search = number of possible pairs = n!/2!(n-2)!
@@ -125,7 +128,8 @@ counter<-0
 # look if they are both positively associated
 for(k in 1:(nei-1)){for(z in (k+1):nei){
 counter<-counter+1
-if(matp[idnei[k],idnei[z]]==1|matp[idnei[z],idnei[k]]==1)
+if ((matn[idnei[z], idnei[k]] + matn[ idnei[z],i] + matn[ idnei[k],i] == 2) & 
+    (matp[idnei[z], idnei[k]] + matp[ idnei[z],i] + matp[ idnei[k],i] == 1))
 ntrip <- ntrip+1
 }
 #if(counter==nos) break
@@ -148,23 +152,26 @@ nsp<-nrow(mat)
 mat[which(is.na(mat))]<-0
 matp<- mat; matp[which(matp<0)]<-0; matp[which(matp>0)]<-1
 matn<- mat; matn[which(matn>0)]<-0; matn[which(matn<0)]<-1
-ntrip<-0
 
+matt<- mat; matt[which(matt>0)]<-1; matt[which(matt<0)]<-1
+#
+ntrip<-0
 for(i in 1:nsp){
-# first, subset two species facilitating with a third
-nei<-sum(matp[,i])
-idnei<-as.numeric(which(matp[,i]==1))
+# first, subset two species associated by a third
+nei<-sum(matt[,i])
+idnei<-as.numeric(which(matt[,i]==1))
 
 if(nei>=2){
 # number of search = number of possible pairs = n!/2!(n-2)!
 nos<- factorial(nei)/(2*factorial(nei-2))
 counter<-0
 
-# then, for each facilitating pair,
-# look if they are both negatively associated
+# then, for each competed pair,
+# look if they are both  associated
 for(k in 1:(nei-1)){for(z in (k+1):nei){
 counter<-counter+1
-if(matn[idnei[k],idnei[z]]==1|matn[idnei[z],idnei[k]]==1)
+if ((matn[idnei[z], idnei[k]] + matn[ idnei[z],i] + matn[ idnei[k],i] == 1) & 
+    (matp[idnei[z], idnei[k]] + matp[ idnei[z],i] + matp[ idnei[k],i] == 2))
 ntrip <- ntrip+1
 }
 #if(counter==nos) break
